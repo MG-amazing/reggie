@@ -57,7 +57,7 @@ Clone 这个 project
   git clone https://github.com/MG-amazing/reggie.git
 
 ```
-然后解压此文件夹,导入至项目运行即可.
+然后解压此文件夹,导入至项目运行即可。
 
 
 
