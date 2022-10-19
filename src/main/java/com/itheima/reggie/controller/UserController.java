@@ -42,7 +42,7 @@ public class UserController {
             log.info("code={}", code);
             //此方法慎用一次5毛钱啊
             //调用短信API发送短信即可
-            SmsUtil.sendMessage(phone,code,"30","2e65b1bb3d054466b82f0c9d125465e2", "908e94ccf08b4476ba6c876d13f084ad");
+            //SmsUtil.sendMessage(phone,code,"30","2e65b1bb3d054466b82f0c9d125465e2", "908e94ccf08b4476ba6c876d13f084ad");
 
             //将生成的验证码保存到Session中
             session.setAttribute(phone, code);
