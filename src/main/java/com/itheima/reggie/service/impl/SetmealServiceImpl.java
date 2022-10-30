@@ -10,11 +10,13 @@ import com.itheima.reggie.mapper.SetmealMapper;
 import com.itheima.reggie.service.SetmealDishService;
 import com.itheima.reggie.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.itheima.reggie.entity.SetmealDish;
 
 @Service
 @Slf4j
@@ -84,5 +86,25 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
                 this.updateById(setmeal);
             }
         }
+    }
+
+    /**
+     * 回显套餐数据：根据套餐id查询套餐
+     * @return
+     */
+    @Transactional
+    public SetmealDto getDate(Long id) {
+        Setmeal setmeal = this.getById(id);
+        SetmealDto setmealDto = new SetmealDto();
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper();
+        //在关联表中查询，setmealdish
+        queryWrapper.eq(id!=null,SetmealDish::getSetmealId,id);
+        if (setmeal != null){
+            BeanUtils.copyProperties(setmeal,setmealDto);
+            List<SetmealDish> list = setmealDishService.list(queryWrapper);
+            setmealDto.setSetmealDishes(list);
+            return setmealDto;
+        }
+        return null;
     }
 }

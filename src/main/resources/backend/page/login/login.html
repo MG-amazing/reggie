@@ -37,7 +37,7 @@
               @keyup.enter.native="handleLogin" />
           </el-form-item>
           <el-form-item style="width:100%;">
-            <el-button :loading="loading" class="login-btn" size="medium" type="primary" style="width:100%;"
+            <el-button :lo="primary" stading="loading" class="login-btn" size="medium" typeyle="width:100%;"
               @click.native.prevent="handleLogin">
               <span v-if="!loading">登录</span>
               <span v-else>登录中...</span>

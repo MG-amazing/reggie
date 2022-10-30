@@ -81,7 +81,7 @@ public class CommonController {
             fileInputStream.close();
 
         } catch (Exception e) {
-            log.info("没有找到{}{}",basePath,name);
+
         }
 
     }

@@ -11,6 +11,8 @@ import com.itheima.reggie.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,10 +31,7 @@ public class SetmealController {
     private SetmealDishService setmealDishService;
     @Autowired
     private CategoryService categoryService;
-    @Autowired
-    private DishFlavorService dishFlavorService;
-    @Autowired
-    private DishService dishService;
+
 
     /**
      * 新增套餐
@@ -41,6 +40,7 @@ public class SetmealController {
      * @return
      */
     @PostMapping
+    @CacheEvict(value = "setmealCache",allEntries = true)
     public R<String> save(@RequestBody SetmealDto setmealDto) {
         log.info("套餐信息:{}", setmealDto);
         setmealService.saveWithDish(setmealDto);
@@ -95,6 +95,7 @@ public class SetmealController {
      * @return
      */
     @DeleteMapping
+    @CacheEvict(value = "setmealCache",allEntries = true)
     public R<String> delete(@RequestParam List<Long> ids) {
         log.info("ids:{}", ids);
         setmealService.removeWithDish(ids);
@@ -106,7 +107,9 @@ public class SetmealController {
      *
      * @return
      */
+
     @PostMapping("/status/{status}")
+    @CacheEvict(value = "setmealCache",allEntries = true)
     //这个参数这里一定记得加注解才能获取到参数，否则这里非常容易出问题
     public R<String> status(@PathVariable("status") Integer status, @RequestParam List<Long> ids) {
         setmealService.updateSetmealStatusById(status, ids);
@@ -118,6 +121,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/list")
+    @Cacheable(value = "setmealCache",key = "#setmeal.categoryId+'_'+#setmeal.status")
     public R<List<Setmeal>> list(Setmeal setmeal){
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(setmeal.getCategoryId() != null,Setmeal::getCategoryId,setmeal.getCategoryId());
@@ -127,5 +131,39 @@ public class SetmealController {
         List<Setmeal> list = setmealService.list(queryWrapper);
 
         return R.success(list);
+    }
+    /**
+     * 回显套餐数据：根据套餐id查询套餐
+     * @return
+     */
+    @GetMapping("/{id}")
+    @Cacheable(value = "setmealCache",key = "#id")
+    public R<SetmealDto> getData(@PathVariable Long id){
+        SetmealDto setmealDto = setmealService.getDate(id);
+        return R.success(setmealDto);
+    }
+
+    @PutMapping
+    @CacheEvict(value = "setmealCache",allEntries = true)
+    public R<String> edit(@RequestBody SetmealDto setmealDto){
+        if (setmealDto==null){
+            return R.error("请求异常");
+        }
+        if (setmealDto.getSetmealDishes()==null){
+            return R.error("套餐没有菜品,请添加套餐");
+        }
+        List<SetmealDish> setmealdishes = setmealDto.getSetmealDishes();
+        Long setmealId = setmealDto.getId();
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId,setmealId);
+        setmealDishService.remove(queryWrapper);
+        //为setmeal_dish表填充相关的属性
+        for (SetmealDish setmealdish : setmealdishes) {
+            setmealdish.setSetmealId(setmealId);
+        }
+        //批量把setmealdish保存到setmeal_dish表
+        setmealDishService.saveBatch(setmealdishes);
+        setmealService.updateById(setmealDto);
+        return R.success("套餐修改成功");
     }
 }
