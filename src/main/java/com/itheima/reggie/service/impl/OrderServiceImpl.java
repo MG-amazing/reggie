@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.common.BaseContext;
 import com.itheima.reggie.common.CustomException;
+import com.itheima.reggie.dto.CountTotalMealAndTotalAmountDto;
 import com.itheima.reggie.entity.*;
 import com.itheima.reggie.mapper.OrderMapper;
 import com.itheima.reggie.service.*;
@@ -28,6 +29,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders>implements
     private UserService userService;
     @Autowired
     private OrderDetailService orderDetailService;
+    private final OrderMapper orderMapper;
+
+    public OrderServiceImpl(OrderMapper orderMapper) {
+        this.orderMapper = orderMapper;
+    }
+
     /**
      * 用户下单
      * @param orders
@@ -93,5 +100,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders>implements
 
         //清空购物车数据
         shoppingCartService.remove(wrapper);
+    }
+
+    @Override
+    public List<Orders> getByBeginAndEndDate(CountTotalMealAndTotalAmountDto data) {
+        return orderMapper.getByBeginAndEndDate(data);
     }
 }

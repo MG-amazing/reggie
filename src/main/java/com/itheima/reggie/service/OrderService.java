@@ -1,7 +1,10 @@
 package com.itheima.reggie.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itheima.reggie.dto.CountTotalMealAndTotalAmountDto;
 import com.itheima.reggie.entity.Orders;
+
+import java.util.List;
 
 public interface OrderService extends IService<Orders> {
     /**
@@ -9,4 +12,6 @@ public interface OrderService extends IService<Orders> {
      * @param orders
      */
     public void submit(Orders orders);
+
+    List<Orders> getByBeginAndEndDate(CountTotalMealAndTotalAmountDto data);
 }
