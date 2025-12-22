@@ -16,4 +16,9 @@ public class MybatisPlusConfig {
         mybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
         return mybatisPlusInterceptor;
     }
+    @Bean
+    public SqlPrintInterceptor sqlPrintInterceptor() {
+        return new SqlPrintInterceptor();
+    }
+
 }
