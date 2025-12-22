@@ -1,6 +1,6 @@
 const countTotalMealAndTotalAmountByDate = (params) => {
     return $axios({
-        url: '/countTotalMealAndTotalAmountByDate',
+        url: '/count/countTotalMealAndTotalAmountByDate',
         method: 'post',
         data: params
     })
