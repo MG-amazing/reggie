@@ -14,6 +14,15 @@ import java.util.Map;
 @Slf4j
 @RequestMapping("/countTotalMealAndTotalAmount")
 public class CountTotalController {
+    /**
+     * 统计某个时间段内的总订单数和总金额
+     * 本题100分
+     * 根据传入的参数，统计某个时间段内的总订单数和总金额
+     例如：
+     请求参数：{dateBegin: "2023-01-01", dateEnd: "2023-01-31"}
+     * @param data
+     * @return
+     */
     @PostMapping("/countTotalMealAndTotalAmountByDate")
     public R<Map<String, Object>> countTotalMealAndTotalAmountByDate(@RequestBody CountTotalMealAndTotalAmountDto data) {
         Map<String, Object> result = new HashMap<>();
