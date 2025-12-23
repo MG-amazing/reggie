@@ -6,6 +6,8 @@ import com.itheima.reggie.entity.User;
 import com.itheima.reggie.service.UserService;
 import com.itheima.reggie.utils.SmsUtil;
 import com.itheima.reggie.utils.ValidateCodeUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@Api(tags = "移动端用户相关接口")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -36,8 +39,9 @@ public class UserController {
      * @param user
      * @return
      */
+    @ApiOperation("发送手机验证码")
     @PostMapping("/sendMsg")
-    public R<String> sendMsg(@RequestBody User user, HttpSession session) {
+    public R<?> sendMsg(@RequestBody User user, HttpSession session) {
         //获取手机号
         String phone = user.getPhone();
         boolean okPhone = phone.matches("^(13[0-9]{9})|(15[0-9]{9})|(17[0-9]{9})|(18[0-9]{9})|(19[0-9]{9})$");
@@ -67,8 +71,9 @@ public class UserController {
      * @param map
      * @return
      */
+    @ApiOperation("移动端用户登录")
     @PostMapping("/login")
-    public R<User> login(@RequestBody Map map, HttpSession session) {
+    public R<?> login(@RequestBody Map map, HttpSession session) {
         log.info("map:{}", map);
         //获取手机号
         String phone = (String) map.get("phone");
@@ -114,8 +119,9 @@ public class UserController {
      * ③返回结果（前端页面会进行跳转到登录页面）
      * @return
      */
+    @ApiOperation("用户退出登录")
     @PostMapping("/loginout")
-    public R<String> logout(HttpServletRequest request){
+    public R<?> logout(HttpServletRequest request){
         //清理session中的用户id
         request.getSession().removeAttribute("user");
         return R.success("退出成功");

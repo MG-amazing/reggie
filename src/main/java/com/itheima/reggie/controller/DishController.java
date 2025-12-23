@@ -10,6 +10,8 @@ import com.itheima.reggie.entity.DishFlavor;
 import com.itheima.reggie.service.CategoryService;
 import com.itheima.reggie.service.DishFlavorService;
 import com.itheima.reggie.service.DishService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/dish")
 @Slf4j
+@Api(tags = "菜品管理相关接口")
 public class DishController {
 
     @Autowired
@@ -50,7 +53,8 @@ public class DishController {
      */
     @Transactional
     @PostMapping
-    public R<String> save(@RequestBody DishDto dishDto) {
+    @ApiOperation("新增菜品")
+    public R<?> save(@RequestBody DishDto dishDto) {
         log.info(dishDto.toString());
         dishService.saveWithFlavor(dishDto);
         //删除redis中的缓存信息
@@ -66,9 +70,10 @@ public class DishController {
      * @param name
      * @return
      */
+    @ApiOperation("根据菜品名称查询菜品")
     @Transactional
     @GetMapping("/page")
-    public R<Page> page(int page, int pageSize, String name) {
+    public R<?> page(int page, int pageSize, String name) {
         //构造分页构造器对象
         Page<Dish> pageInfo = new Page<>(page, pageSize);
         Page<DishDto> dishDtoPage = new Page<>();
@@ -109,9 +114,10 @@ public class DishController {
      * @param id
      * @return
      */
+    @ApiOperation("根据id查询菜品信息和对应的口味信息")
     @Transactional
     @GetMapping("/{id}")
-    public R<DishDto> get(@PathVariable Long id) {
+    public R<?> get(@PathVariable Long id) {
         DishDto dishDto = dishService.getByIdWithFlavor(id);
         return R.success(dishDto);
     }
@@ -124,7 +130,8 @@ public class DishController {
      */
     @Transactional
     @PutMapping
-    public R<String> update(@RequestBody DishDto dishDto) {
+    @ApiOperation("修改菜品")
+    public R<?> update(@RequestBody DishDto dishDto) {
         log.info(dishDto.toString());
         dishService.updateWithFlavor(dishDto);
         //清理所有菜品中的缓存数据
@@ -142,8 +149,9 @@ public class DishController {
      */
     @PostMapping("/status/{status}")
     @Transactional
+    @ApiOperation("对菜品批量或者是单个 进行停售或者是起售")
 //这个参数这里一定记得加注解才能获取到参数，否则这里非常容易出问题
-    public R<String> status(@PathVariable("status") Integer status,@RequestParam List<Long> ids){
+    public R<?> status(@PathVariable("status") Integer status,@RequestParam List<Long> ids){
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper();
         queryWrapper.in(ids !=null,Dish::getId,ids);
         //根据数据进行批量查询
@@ -167,9 +175,10 @@ public class DishController {
      * @param ids
      * @return
      */
+    @ApiOperation("根据ids批量删除或者单个删除数据")
     @DeleteMapping()
     @Transactional
-    public R<String> delete(Long ids[]) {
+    public R<?> delete(Long ids[]) {
         List<Long> lists = Arrays.asList(ids);
 
         log.info(lists.toString());
@@ -211,8 +220,9 @@ public class DishController {
      * 根据条件查询对应菜品数据
      */
     @Transactional
+    @ApiOperation("根据条件查询对应菜品数据")
     @GetMapping("/list")
-    public R<List<DishDto>> list(Dish dish) {
+    public R<?> list(Dish dish) {
         List<DishDto> dishDtoList =null;
         String key="dish_"+dish.getCategoryId()+"_"+dish.getStatus();
         //构造查询条件

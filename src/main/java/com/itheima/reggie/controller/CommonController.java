@@ -1,6 +1,8 @@
 package com.itheima.reggie.controller;
 
 import com.itheima.reggie.common.R;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/common")
+@Api(tags = "文件上传下载相关接口")
 @Slf4j
 public class CommonController {
     @Value("${reggie.path}")
@@ -32,8 +35,9 @@ public class CommonController {
      * @param file
      * @return
      */
+    @ApiOperation("文件上传")
     @PostMapping("/upload")
-    public R<String> upload(MultipartFile file) {
+    public R<?> upload(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
         log.info("用户上传文件" + file.toString());
         //file是个临时文件需要保存到指定位置,否则本次请求完成后临时文件会删除
@@ -64,6 +68,7 @@ public class CommonController {
      * @param name
      * @param response
      */
+    @ApiOperation("文件下载")
     @GetMapping("/download")
     public void download(String name, HttpServletResponse response) {
         //输入流,通过输入流读取文件内容

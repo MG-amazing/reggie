@@ -6,6 +6,8 @@ import com.itheima.reggie.entity.OrderDetail;
 import com.itheima.reggie.entity.Orders;
 import com.itheima.reggie.service.OrderDetailService;
 import com.itheima.reggie.service.OrderService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @Slf4j
 @RequestMapping("/count")
+@Api(tags = "统计某个时间段内的总订单数和总金额相关接口")
 public class CountTotalController {
     /**
      * TODO
@@ -68,8 +71,9 @@ public class CountTotalController {
         this.orderService = orderService;
         this.orderDetailService = orderDetailService;
     }
+    @ApiOperation("统计某个时间段内的总订单数和总金额")
     @PostMapping("/countTotalMealAndTotalAmountByDate")
-    public R<Map<String, Object>> countTotalMealAndTotalAmountByDate(@RequestBody CountTotalMealAndTotalAmountDto param) {
+    public R<?> countTotalMealAndTotalAmountByDate(@RequestBody CountTotalMealAndTotalAmountDto param) {
         Map<String, Object> result = new HashMap<>();
         //请在此处编码
 

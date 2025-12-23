@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.entity.Employee;
 import com.itheima.reggie.service.EmployeeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
+@Api(tags = "员工相关接口")
 @RequestMapping("/employee")
 public class EmployeeController {
     @Autowired
@@ -28,8 +31,9 @@ public class EmployeeController {
      * @param employee
      * @return
      */
+    @ApiOperation("员工登录接口")
     @PostMapping("/login")
-    public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
+    public R<?> login(HttpServletRequest request, @RequestBody Employee employee) {
         //将页面提交的密码进行MD5加密
         String password = employee.getPassword();
         password = DigestUtils.md5DigestAsHex(password.getBytes());
@@ -61,8 +65,9 @@ public class EmployeeController {
      * @param request
      * @return
      */
+    @ApiOperation("员工退出接口")
     @PostMapping("/logout")
-    public R<String> logout(HttpServletRequest request) {
+    public R<?> logout(HttpServletRequest request) {
         //清除Session中保存的当前登录员工的Id
         request.getSession().removeAttribute("employee");
         return R.success("退出成功");
@@ -74,8 +79,9 @@ public class EmployeeController {
      * @param employee
      * @return
      */
+    @ApiOperation("新增员工接口")
     @PostMapping
-    public R<String> save(HttpServletRequest request, @RequestBody Employee employee) {
+    public R<?> save(HttpServletRequest request, @RequestBody Employee employee) {
         log.info("新增员工,员工信息{}", employee.toString());
         //设置初始密码,进行MD5加密
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
@@ -98,8 +104,9 @@ public class EmployeeController {
      * @param name
      * @return
      */
+    @ApiOperation("员工信息分页查询接口")
     @GetMapping("/page")
-    public R<Page> pageR(int page, int pageSize, String name) {
+    public R<?> pageR(int page, int pageSize, String name) {
         log.info("page={},pageSize{},name{}", page, pageSize, name);
         //构造分页构造器
         Page pageInfo = new Page(page, pageSize);
@@ -119,8 +126,9 @@ public class EmployeeController {
      * @param employee
      * @return
      */
+    @ApiOperation("根据id修改员工信息接口")
     @PutMapping
-    public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
+    public R<?> update(HttpServletRequest request,@RequestBody Employee employee){
         log.info(employee.toString());
 
 
@@ -138,8 +146,9 @@ public class EmployeeController {
      * @param id
      * @return
      */
+    @ApiOperation("根据id查询员工信息接口")
     @GetMapping("/{id}")
-    public R<Employee> getById(@PathVariable Long id){
+    public R<?> getById(@PathVariable Long id){
         log.info("根据id查询员工信息");
         Employee employee = employeeService.getById(id);
         if (employee!=null){

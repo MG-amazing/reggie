@@ -39,10 +39,12 @@ public class LoginCheckFilter implements Filter {
                 "/doc.html",
                 "/swagger-ui/**",
                 "/v3/api-docs/**",
+                "/v2/api-docs/**",
                 "/swagger-resources/**",
                 "/webjars/**",
                 "/error"
         };
+
         //判断本次请求是否需要处理
         boolean check = check(urls, requestURI);
         //如果不用处理直接放行

@@ -10,6 +10,8 @@ import com.itheima.reggie.entity.ShoppingCart;
 import com.itheima.reggie.service.OrderDetailService;
 import com.itheima.reggie.service.OrderService;
 import com.itheima.reggie.service.ShoppingCartService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
+@Api(tags = "订单相关接口")
 @RequestMapping("/order")
 public class OrderController {
     @Autowired
@@ -38,8 +41,9 @@ public class OrderController {
      * @param orders
      * @return
      */
+    @ApiOperation("用户下单功能")
     @PostMapping("/submit")
-    public R<String>submit(@RequestBody Orders orders){
+    public R<?>submit(@RequestBody Orders orders){
         log.info("订单数据:{}",orders);
         ordersService.submit(orders);
         return R.success("下单成功");
@@ -50,8 +54,9 @@ public class OrderController {
      * @param pageSize
      * @return
      */
+    @ApiOperation("用户订单分页查询")
     @GetMapping("/userPage")
-    public R<Page> page(int page, int pageSize){
+    public R<?> page(int page, int pageSize){
 
         //分页构造器对象
         Page<Orders> pageInfo = new Page<>(page,pageSize);
@@ -73,8 +78,9 @@ public class OrderController {
      * @param endTime
      * @return
      */
+    @ApiOperation("后台查询订单明细")
     @GetMapping("/page")
-    public R<Page> page(int page, int pageSize, String number,String beginTime,String endTime){
+    public R<?> page(int page, int pageSize, String number,String beginTime,String endTime){
         //分页构造器对象
         Page<Orders> pageInfo = new Page<>(page,pageSize);
         //构造条件查询对象
@@ -90,7 +96,8 @@ public class OrderController {
         return R.success(pageInfo);
     }
     @PutMapping
-    public R<String> orderStatusChange(@RequestBody Map<String,String> map){
+    @ApiOperation("订单状态修改")
+    public R<?> orderStatusChange(@RequestBody Map<String,String> map){
 
         String id = map.get("id");
         Long orderId = Long.parseLong(id);
@@ -114,8 +121,9 @@ public class OrderController {
      * 不然就会导致再来一单的数据有问题；
      * (这样可能会影响用户体验，但是对于外卖来说，用户体验的影响不是很大，电商项目就不能这么干了)
      */
+    @ApiOperation("前端点击再来一单")
     @PostMapping("/again")
-    public R<String> againSubmit(@RequestBody Map<String,String> map){
+    public R<?> againSubmit(@RequestBody Map<String,String> map){
         String ids = map.get("id");
 
         long id = Long.parseLong(ids);
