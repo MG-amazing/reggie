@@ -2,6 +2,8 @@ package com.itheima.reggie.controller;
 
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.dto.CountTotalMealAndTotalAmountDto;
+import com.itheima.reggie.entity.OrderDetail;
+import com.itheima.reggie.entity.Orders;
 import com.itheima.reggie.service.OrderDetailService;
 import com.itheima.reggie.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -64,11 +68,11 @@ public class CountTotalController {
         this.orderService = orderService;
         this.orderDetailService = orderDetailService;
     }
-
     @PostMapping("/countTotalMealAndTotalAmountByDate")
     public R<Map<String, Object>> countTotalMealAndTotalAmountByDate(@RequestBody CountTotalMealAndTotalAmountDto param) {
         Map<String, Object> result = new HashMap<>();
         //请在此处编码
+
 
 
         return R.success(result);
